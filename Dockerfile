@@ -3,6 +3,9 @@ ENV CLUSTER_NAME=foxpass
 COPY . /opt
 WORKDIR /opt
 RUN mvn install package -DskipTests=true
+RUN chmod +x ./helix-core/target/helix-core-pkg/bin/*.sh
+RUN chmod +x ./helix-front/target/helix-front-pkg/bin/*.sh
+RUN chmod +x ./helix-rest/target/helix-rest-pkg/bin/*.sh
 
 FROM scratch
 LABEL maintainer="Bryan Bojorque <bryan@foxpass.com>"
