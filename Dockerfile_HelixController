@@ -1,5 +1,0 @@
-FROM openjdk:8-jre-slim
-ENV CLUSTER_NAME=FOXPASS
-COPY . /opt
-WORKDIR /opt
-#CMD ["./run_docker_helix_controller.sh"]
