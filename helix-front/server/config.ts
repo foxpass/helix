@@ -1,6 +1,12 @@
+declare var process : {
+  env: {
+    HELIX_API_ENDPOINT: string
+  }
+}
+
 export const HELIX_ENDPOINTS = {
   helix: [{
-    default: 'http://localhost:8100/admin/v2'
+    default: process.env.HELIX_API_ENDPOINT || 'http://localhost:8100/admin/v2'
   }]
 };
 
