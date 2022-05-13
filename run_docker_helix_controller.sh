@@ -8,7 +8,7 @@ HELIX_API_ENDPOINT="${HELIX_API_ENDPOINT:-'http://helix-api.docker.internal:8100
 # add the cluster name to zookeeper
 ./helix-core/target/helix-core-pkg/bin/helix-admin.sh --zkSvr $ZKSRVR --addCluster $CLUSTER
 
-POST_PARAM_1 <<- EOF
+POST_PARAM_1=$(cat << EOF
 {
  "id" : "$CLUSTER",
   "simpleFields" : {
@@ -22,11 +22,12 @@ POST_PARAM_1 <<- EOF
   }
 }
 EOF
+)
 
 # The below curl will update the configs for the cluster
-curl -X POST -H "Content-Type: application/json" $HELIX_API_ENDPOINT/admin/v2/clusters/$CLUSTER/configs\?command\=update -d $POST_PARAM_1
+curl -X POST -H 'Content-Type: application/json' -d "$POST_PARAM_1" $HELIX_API_ENDPOINT/admin/v2/clusters/$CLUSTER/configs\?command\=update
 
-POST_PARAM_2 <<- EOF
+POST_PARAM_2=$(cat << EOF
 {
   "id":"ldap_master",
   "simpleFields" : {
@@ -40,9 +41,10 @@ POST_PARAM_2 <<- EOF
   }
 }
 EOF
+)
 
 # the below curl command will create the leader domain "ldap_master"
-curl -X PUT -H "Content-Type: application/json" http://helix-api.foxbox.foxpass.internal:8100/admin/v2/clusters/$CLUSTER/resources/ldap_master -d POST_PARAM_2
-curl -X POST -H "Content-Type: application/json"  http://helix-api.foxbox.foxpass.internal:8100/admin/v2/clusters/$CLUSTER/resources/ldap_master\?command\=rebalance\&replicas\=1
+curl -X PUT -H "Content-Type: application/json" -d "$POST_PARAM_2" $HELIX_API_ENDPOINT/admin/v2/clusters/$CLUSTER/resources/ldap_master
+curl -X POST -H "Content-Type: application/json"  $HELIX_API_ENDPOINT/admin/v2/clusters/$CLUSTER/resources/ldap_master\?command\=rebalance\&replicas\=1
 # start the controller
 ./helix-core/target/helix-core-pkg/bin/run-helix-controller.sh --zkSvr $ZKSRVR --cluster $CLUSTER --mode STANDALONE --controllerName helix-controller-$SUBNET 2>&1
