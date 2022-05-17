@@ -1,0 +1,4 @@
+FROM 843529240033.dkr.ecr.us-west-2.amazonaws.com/foxpass_helix:latest
+COPY ./run_docker_helix_controller.sh /opt/
+COPY ./run_docker_helix_api.sh /opt/
+COPY ./run_docker_helix_ui.sh /opt/
