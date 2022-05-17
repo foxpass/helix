@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      - $(aws --region us-west-2 ecr get-login --no-include-email)
+      - docker login --username=foxpassautomation --password=$docker_login
+      - base_hash=`git rev-parse --short HEAD`
+      - echo $base_hash
+  build:
+    commands:
+      - |
+        if [ "$rebuild" = "false" ]; then
+            docker build -f Dockerfile_fast -t foxpass-helix .
+        else
+            docker build -t foxpass-helix .
+        fi
+      - docker tag foxpass-helix 843529240033.dkr.ecr.us-west-2.amazonaws.com/foxpass_helix:$base_hash
+      - docker tag foxpass-helix 843529240033.dkr.ecr.us-west-2.amazonaws.com/foxpass_helix:latest
+  post_build:
+    commands:
+      - docker push 843529240033.dkr.ecr.us-west-2.amazonaws.com/foxpass_helix:$base_hash
+      - docker push 843529240033.dkr.ecr.us-west-2.amazonaws.com/foxpass_helix:latest
