@@ -191,6 +191,7 @@ under the License.
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
+          <extraJvmArguments> ${EXTRA_JVM_ARGUMENTS}</extraJvmArguments>
           <descriptors>
             <descriptor>src/assemble/assembly.xml</descriptor>
           </descriptors>
